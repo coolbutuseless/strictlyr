@@ -1,0 +1,59 @@
+---
+title: "ungroup-pipe"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ungroup-pipe}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(dplyr, warn.conflicts = FALSE)
+```
+
+# Missing an `ungroup()` in standard `dplyr`
+
+```{r}
+res1 <- mtcars %>%
+  group_by(cyl) %>%
+  mutate(max_mpg = max(mpg))
+```
+
+
+# Load `strictlyr` for a noisy pipe
+
+`strictlyr` includes a noisy pipe which shows a warning if the input or output
+from a chain of operations has groups
+```{r}
+library(strictlyr, warn.conflicts = FALSE)
+```
+
+
+
+# Missing an `ungroup()` when `strictlyr` is loaded
+
+```{r error=TRUE}
+res1 <- mtcars %>%
+  group_by(cyl) %>%
+  mutate(max_mpg = max(mpg))
+```
+
+
+
+
+# Missing an `ungroup()` when `strictlyr` is loaded, but it's told to be quiet
+
+```{r}
+options(STRICTLYR_PIPE = 'quiet')
+
+res1 <- mtcars %>%
+  group_by(cyl) %>%
+  mutate(max_mpg = max(mpg))
+```
